@@ -186,21 +186,12 @@ const grandTotal =
   payload
 );
 
-setOrderNumber(
-  res.data.bookingNumber ||
-  "Order Created"
-);
-
-import.meta.env.VITE_API_URL
-
-console.log("showSuccess =", showSuccess);
-console.log("ORDER CREATED");
+console.log("FULL RESPONSE");
+console.log(res);
+console.log("RESPONSE DATA");
 console.log(res.data);
 
-console.log(
-  "SUCCESS POPUP OPENING"
-);
-setShowSuccess(true);
+alert("POST SUCCESS");
 
 console.log("showSuccess should be true now");
 <h1 style={{ marginBottom: "25px" }}>
