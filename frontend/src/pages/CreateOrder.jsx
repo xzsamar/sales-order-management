@@ -665,6 +665,49 @@ setShowSuccess(true);
           Continue
         </button>
       </div>
+      {showSuccess && (
+  <div className="modal">
+    <div
+      style={{
+        background: "white",
+        padding: "30px",
+        borderRadius: "16px",
+        minWidth: "350px",
+        textAlign: "center",
+      }}
+    >
+      <h2>✅ Order Created Successfully</h2>
+
+      <p
+        style={{
+          marginTop: "10px",
+          color: "#64748b",
+        }}
+      >
+        Order Number:
+      </p>
+
+      <h3>{orderNumber}</h3>
+
+      <button
+        onClick={() =>
+          setShowSuccess(false)
+        }
+        style={{
+          marginTop: "20px",
+          background: "#2563eb",
+          color: "white",
+          border: "none",
+          padding: "10px 20px",
+          borderRadius: "10px",
+          cursor: "pointer",
+        }}
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
     </div>
   )
 }
