@@ -601,116 +601,73 @@ setShowSuccess(true);
       </div>
     </div>
   )
-}  {
-  showSuccess && (
+}  {showSuccess && (
+  <div
+    className="modal"
+    onClick={() =>
+      setShowSuccess(false)
+    }
+  >
     <div
-      className="modal"
-      onClick={() =>
-        setShowSuccess(false)
+      className="card"
+      onClick={(e) =>
+        e.stopPropagation()
       }
-    >
-      <div
-        className="card"
-        onClick={(e) =>
-          e.stopPropagation()
-        }
-        style={{
-          width: "450px",
-          textAlign: "center",
-        }}
-      >
-        <div
-          style={{
-            fontSize: "70px",
-            marginBottom: "15px",
-          }}
-        >
-          ✅
-        </div>
-
-        <h2>
-          Order Created Successfully
-        </h2>
-
-        <p
-          style={{
-            marginTop: "15px",
-            color: "#64748b",
-          }}
-        >
-          Booking Number
-        </p>
-
-        <h3
-          style={{
-            color: "#16a34a",
-            marginTop: "10px",
-          }}
-        >
-          {orderNumber}
-        </h3>
-
-        <button
-          onClick={() =>
-            setShowSuccess(false)
-          }
-          style={{
-            background: "#16a34a",
-            color: "white",
-            padding: "12px 20px",
-            borderRadius: "10px",
-            marginTop: "20px",
-          }}
-        >
-          Continue
-        </button>
-      </div>
-      {showSuccess && (
-  <div className="modal">
-    <div
       style={{
-        background: "white",
-        padding: "30px",
-        borderRadius: "16px",
-        minWidth: "350px",
+        width: "450px",
         textAlign: "center",
       }}
     >
-      <h2>✅ Order Created Successfully</h2>
+      <div
+        style={{
+          fontSize: "70px",
+          marginBottom: "15px",
+        }}
+      >
+        ✅
+      </div>
+
+      <h2>
+        Order Created Successfully
+      </h2>
 
       <p
         style={{
-          marginTop: "10px",
+          marginTop: "15px",
           color: "#64748b",
         }}
       >
-        Order Number:
+        Booking Number
       </p>
 
-      <h3>{orderNumber}</h3>
+      <h3
+        style={{
+          color: "#16a34a",
+          marginTop: "10px",
+        }}
+      >
+        {orderNumber}
+      </h3>
 
       <button
         onClick={() =>
           setShowSuccess(false)
         }
         style={{
-          marginTop: "20px",
-          background: "#2563eb",
+          background: "#16a34a",
           color: "white",
-          border: "none",
-          padding: "10px 20px",
+          padding: "12px 20px",
           borderRadius: "10px",
+          marginTop: "20px",
+          border: "none",
           cursor: "pointer",
         }}
       >
-        Close
+        Continue
       </button>
     </div>
   </div>
 )}
-    </div>
-  )
-}
     </div>
   );
 };
