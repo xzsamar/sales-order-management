@@ -1,5 +1,15 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
+import axios from "axios";
+
+export const BASE_URL =
+  import.meta.env.VITE_API_URL;
+
+const API = axios.create({
+  baseURL: BASE_URL,
+});
+
+export default API;
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -39,11 +49,11 @@ const [selectedCustomer, setSelectedCustomer] =
 };
 
   const downloadPDF = (id) => {
-    window.open(
-      `import.meta.env.VITE_API_URL/api/orders/pdf/${id}`,
-      "_blank"
-    );
-  };
+  window.open(
+    `${import.meta.env.VITE_API_URL}/orders/pdf/${id}`,
+    "_blank"
+  );
+};
 
   const deleteOrder = async (id) => {
     const confirmDelete = window.confirm(
