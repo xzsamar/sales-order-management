@@ -187,13 +187,19 @@ const grandTotal =
 );
 
 setOrderNumber(
-  res.data.bookingNumber
+  res.data.bookingNumber ||
+  "Order Created"
 );
+
+import.meta.env.VITE_API_URL
 
 console.log("showSuccess =", showSuccess);
 console.log("ORDER CREATED");
 console.log(res.data);
 
+console.log(
+  "SUCCESS POPUP OPENING"
+);
 setShowSuccess(true);
 
 console.log("showSuccess should be true now");
@@ -620,7 +626,7 @@ console.log("showSuccess should be true now");
       </div>
     </div>
   )
-}  {showSuccess && (
+}   {showSuccess && (
   <div
     className="modal"
     onClick={() =>
@@ -628,59 +634,32 @@ console.log("showSuccess should be true now");
     }
   >
     <div
-      className="card"
+      className="success-modal"
       onClick={(e) =>
         e.stopPropagation()
       }
-      style={{
-        width: "450px",
-        textAlign: "center",
-      }}
     >
-      <div
-        style={{
-          fontSize: "70px",
-          marginBottom: "15px",
-        }}
-      >
+      <div className="success-icon">
         ✅
       </div>
 
-      <h2>
+      <h2 className="success-title">
         Order Created Successfully
       </h2>
 
-      <p
-        style={{
-          marginTop: "15px",
-          color: "#64748b",
-        }}
-      >
+      <p>
         Booking Number
       </p>
 
-      <h3
-        style={{
-          color: "#16a34a",
-          marginTop: "10px",
-        }}
-      >
+      <div className="success-order">
         {orderNumber}
-      </h3>
+      </div>
 
       <button
+        className="success-btn"
         onClick={() =>
           setShowSuccess(false)
         }
-        style={{
-          background: "#16a34a",
-          color: "white",
-          padding: "12px 20px",
-          borderRadius: "10px",
-          marginTop: "20px",
-          border: "none",
-          cursor: "pointer",
-        }}
       >
         Continue
       </button>
