@@ -1,15 +1,5 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
-import axios from "axios";
-
-export const BASE_URL =
-  import.meta.env.VITE_API_URL;
-
-const API = axios.create({
-  baseURL: BASE_URL,
-});
-
-export default API;
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
