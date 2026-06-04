@@ -187,35 +187,23 @@ const grandTotal =
   payload
 );
 
-console.log("FULL RESPONSE");
-console.log(res);
-console.log("RESPONSE DATA");
-console.log(res.data);
+setOrderNumber(
+  res.data.bookingNumber || "N/A"
+);
 
-alert("POST SUCCESS");
+setShowSuccess(true);
 
-console.log("showSuccess should be true now");
-<h1 style={{ marginBottom: "25px" }}>
-  Create Sales Ord
-</h1>
-{showSuccess && (
-  <h1
-    style={{
-      color: "red",
-      fontSize: "40px",
-    }}
-  >
-    SUCCESS STATE WORKING
-  </h1>
-)}
+toast.success(
+  `Order ${res.data.bookingNumber} created successfully!`
+);
 
-      setCustomer("");
-      setSalesPerson("");
-      setSelectedProduct("");
-      setQuantity("");
-      setItems([]);
+setCustomer("");
+setSalesPerson("");
+setSelectedProduct("");
+setQuantity("");
+setItems([]);
 
-      loadData();
+loadData();
     } catch (error) {
   if (
     error.response?.data?.alternatives
