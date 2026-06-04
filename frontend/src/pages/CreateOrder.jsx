@@ -181,10 +181,15 @@ const grandTotal =
         })),
       };
 
-    const res = await API.post("/orders", payload);
+    const res = await API.post(
+  "/orders",
+  payload
+);
+
 setOrderNumber(
   res.data.bookingNumber
 );
+
 setShowSuccess(true);
 
       setCustomer("");
