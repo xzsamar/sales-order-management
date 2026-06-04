@@ -151,7 +151,7 @@ const grandTotal =
   subtotal - totalDiscount;
 
   const submitOrder = async () => {
-     alert("BUTTON CLICKED");
+
     try {
       if (!customer) {
         alert("Please select a customer");
