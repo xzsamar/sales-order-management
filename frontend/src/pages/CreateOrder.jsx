@@ -151,6 +151,7 @@ const grandTotal =
   subtotal - totalDiscount;
 
   const submitOrder = async () => {
+     alert("BUTTON CLICKED");
     try {
       if (!customer) {
         alert("Please select a customer");
@@ -195,7 +196,7 @@ alert("POST SUCCESS");
 
 console.log("showSuccess should be true now");
 <h1 style={{ marginBottom: "25px" }}>
-  Create Sales Order
+  Create Sales Ord
 </h1>
 {showSuccess && (
   <h1
