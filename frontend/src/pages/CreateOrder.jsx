@@ -247,7 +247,7 @@ console.log("showSuccess should be true now");
   return (
     <div>
       <h1 style={{ marginBottom: "25px" }}>
-        Create Sales Order
+        Create Sales Ord
       </h1>
 
       <div
