@@ -190,7 +190,26 @@ setOrderNumber(
   res.data.bookingNumber
 );
 
+console.log("showSuccess =", showSuccess);
+console.log("ORDER CREATED");
+console.log(res.data);
+
 setShowSuccess(true);
+
+console.log("showSuccess should be true now");
+<h1 style={{ marginBottom: "25px" }}>
+  Create Sales Order
+</h1>
+{showSuccess && (
+  <h1
+    style={{
+      color: "red",
+      fontSize: "40px",
+    }}
+  >
+    SUCCESS STATE WORKING
+  </h1>
+)}
 
       setCustomer("");
       setSalesPerson("");
