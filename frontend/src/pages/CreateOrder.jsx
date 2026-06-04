@@ -120,7 +120,7 @@ const totalDiscount = items.reduce(
         100
     );
   },
-  0
+  
 );
 
 const totalFOC = items.reduce(
@@ -247,7 +247,7 @@ console.log("showSuccess should be true now");
   return (
     <div>
       <h1 style={{ marginBottom: "25px" }}>
-        Create Sales Ord
+        Create Sales Order
       </h1>
 
       <div
