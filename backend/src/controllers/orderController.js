@@ -163,7 +163,7 @@ const createOrder = async (req, res) => {
       await Order.findById(order._id)
         .populate("customer");
 
-    await sendOrderEmail(populatedOrder);
+    //await sendOrderEmail(populatedOrder);
 
     res.status(201).json(order);
   } catch (error) {
