@@ -163,9 +163,9 @@ const createOrder = async (req, res) => {
       await Order.findById(order._id)
         .populate("customer");
 
-    //await sendOrderEmail(populatedOrder);
+    sendOrderEmail(order).catch(console.error);
 
-    res.status(201).json(order);
+    return res.status(201).json(order);
   } catch (error) {
     res.status(500).json({
       message: error.message,
