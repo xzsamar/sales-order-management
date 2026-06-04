@@ -120,7 +120,7 @@ const totalDiscount = items.reduce(
         100
     );
   },
-  
+  0
 );
 
 const totalFOC = items.reduce(
