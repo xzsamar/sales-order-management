@@ -163,23 +163,34 @@ const populatedOrder =
   await Order.findById(order._id)
     .populate("customer");
 
+console.log(
+  "Order saved:",
+  order.bookingNumber
+);
+
 res.status(201).json(order);
 
 setImmediate(async () => {
   try {
-    const populatedOrder = await Order.findById(order._id)
-      .populate("customer");
-
-    await sendOrderEmail(
-      populatedOrder,
-      pdfPath // whatever PDF path you're using
+    console.log(
+      "Starting email process..."
     );
 
-    console.log("Email sent");
+    await sendOrderEmail(
+      populatedOrder
+    );
+
+    console.log(
+      "Email sent successfully"
+    );
   } catch (error) {
-    console.error(error);
+    console.error(
+      "Email error:",
+      error
+    );
   }
 });
+
 return;
   } catch (error) {
     res.status(500).json({

@@ -5,6 +5,24 @@ const sendOrderEmail = async (
   pdfPath
 ) => {
   try {
+    console.log(
+  "sendOrderEmail called"
+);
+
+console.log(
+  "OWNER_EMAIL:",
+  process.env.OWNER_EMAIL
+);
+
+console.log(
+  "EMAIL_USER:",
+  process.env.EMAIL_USER
+);
+
+console.log(
+  "PDF Path:",
+  pdfPath
+);
     const transporter = nodemailer.createTransport({
       service: "gmail",
 
