@@ -144,6 +144,24 @@ const createOrder = async (req, res) => {
     const grandTotal =
       grossAmount - totalDiscount;
 
+      const totalExposure =
+  (customerData.outstandingAmount || 0) +
+  grandTotal;
+
+if (
+  totalExposure >
+  (customerData.creditLimit || 0)
+) {
+  return res.status(400).json({
+    message:
+      `Credit limit exceeded.\n` +
+      `Credit Limit: OMR ${customerData.creditLimit.toFixed(3)}\n` +
+      `Outstanding: OMR ${(customerData.outstandingAmount || 0).toFixed(3)}\n` +
+      `Order Amount: OMR ${grandTotal.toFixed(3)}\n` +
+      `Total Exposure: OMR ${totalExposure.toFixed(3)}`
+  });
+}
+
     const bookingNumber = `SO-${Date.now()}`;
 
     const order = await Order.create({
@@ -158,6 +176,12 @@ const createOrder = async (req, res) => {
   totalFOC,
   grandTotal,
 });
+
+customerData.outstandingAmount =
+  (customerData.outstandingAmount || 0) +
+  grandTotal;
+
+await customerData.save();
 
 const populatedOrder =
   await Order.findById(order._id)
@@ -348,6 +372,21 @@ const deleteOrder = async (req, res) => {
     await Order.findByIdAndDelete(
       req.params.id
     );
+
+    const customer = await Customer.findById(
+  order.customer
+);
+
+if (customer) {
+  customer.outstandingAmount -=
+    order.grandTotal;
+
+  if (customer.outstandingAmount < 0) {
+    customer.outstandingAmount = 0;
+  }
+
+  await customer.save();
+}
 
     res.status(200).json({
       message: "Order deleted successfully",
