@@ -14,20 +14,6 @@ const {
   deleteOrder,
 } = require("../controllers/orderController");
 
-router.post("/", createOrder);
-
-router.get("/", getOrders);
-
-router.get("/search", searchOrders);
-
-router.get("/filter", filterOrdersByDate);
-
-router.get("/pdf/:id", downloadOrderPDF);
-
-router.delete("/:id", deleteOrder);
-
-router.get("/:id", getOrderById);
-
 router.get("/test-email", async (req, res) => {
   try {
     await sendOrderEmail({
@@ -46,5 +32,21 @@ router.get("/test-email", async (req, res) => {
     res.status(500).send(error.message);
   }
 });
+
+router.post("/", createOrder);
+
+router.get("/", getOrders);
+
+router.get("/search", searchOrders);
+
+router.get("/filter", filterOrdersByDate);
+
+router.get("/pdf/:id", downloadOrderPDF);
+
+router.delete("/:id", deleteOrder);
+
+router.get("/:id", getOrderById);
+
+
 
 module.exports = router;
