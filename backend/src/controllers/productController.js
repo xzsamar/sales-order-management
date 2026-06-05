@@ -86,18 +86,9 @@ const getSimilarProducts = async (req, res) => {
     }
 
     const similarProducts = await Product.find({
-      $or: [
-        {
-          genericName: product.genericName,
-        },
-        {
-          category: product.category,
-        },
-      ],
-      _id: {
-        $ne: product._id,
-      },
-    });
+  genericName: product.genericName,
+  productName: { $ne: product.productName },
+});
 
     res.status(200).json(similarProducts);
   } catch (error) {
@@ -155,8 +146,9 @@ const getVariations = async (req, res) => {
     }
 
     const variations = await Product.find({
-      genericName: product.genericName,
-    });
+  productName: product.productName,
+  _id: { $ne: product._id },
+});
 
     res.status(200).json(variations);
   } catch (error) {

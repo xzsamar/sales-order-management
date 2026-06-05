@@ -308,6 +308,36 @@ const Customers = () => {
         {selectedCustomer.outstandingAmount}
       </p>
 
+      <p>
+        <strong>Address:</strong>{" "}
+        {[
+          selectedCustomer.address?.area,
+          selectedCustomer.address?.city,
+          selectedCustomer.address?.country,
+          selectedCustomer.address?.zipcode,
+        ]
+          .filter(Boolean)
+          .join(", ") || "-"}
+      </p>
+
+      {selectedCustomer.address?.googleMapUrl && (
+        <p>
+          <strong>Map:</strong>{" "}
+          <a
+            href={selectedCustomer.address.googleMapUrl}
+            target="_blank"
+            rel="noreferrer"
+            style={{ color: "#2563eb" }}
+          >
+            View on Google Maps
+          </a>
+        </p>
+      )}
+
+      <p>
+        <strong>Status:</strong> {selectedCustomer.status}
+      </p>
+
       <button
         onClick={() => setShowDetails(false)}
         style={{

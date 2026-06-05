@@ -23,6 +23,16 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
 
+    strength: {
+  type: String,
+  default: "",
+},
+
+dosageForm: {
+  type: String,
+  default: "",
+},
+
     category: {
       type: String,
       required: true,
