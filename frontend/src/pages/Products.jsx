@@ -1,377 +1,284 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
-import { createPortal } from "react-dom";
-
+import { FaSearch } from "react-icons/fa";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [similarProducts, setSimilarProducts] = useState([]);
+  const [variations, setVariations] = useState([]);
+  const [showDetails, setShowDetails] = useState(false);
+  const [showAlternatives, setShowAlternatives] = useState(false);
+  const [showVariations, setShowVariations] = useState(false);
 
-  const [selectedProduct, setSelectedProduct] =
-    useState(null);
-
-  const [similarProducts, setSimilarProducts] =
-    useState([]);
-
-  const [variations, setVariations] =
-    useState([]);
-
-  const [showDetails, setShowDetails] =
-    useState(false);
-
-  const [showAlternatives, setShowAlternatives] =
-    useState(false);
-
-  const [showVariations, setShowVariations] =
-    useState(false);
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  useEffect(() => { fetchProducts(); }, []);
 
   const fetchProducts = async () => {
     try {
       const res = await API.get("/products");
       setProducts(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const viewDetails = (product) => {
-    setSelectedProduct(product);
-    setShowDetails(true);
+    } catch (err) { console.log(err); }
   };
 
   const viewAlternatives = async (id) => {
     try {
-      const res = await API.get(
-        `/products/${id}/similar`
-      );
-
+      const res = await API.get(`/products/${id}/similar`);
       setSimilarProducts(res.data);
       setShowAlternatives(true);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (err) { console.log(err); }
   };
 
   const viewVariations = async (id) => {
     try {
-      const res = await API.get(
-        `/products/${id}/variations`
-      );
-
+      const res = await API.get(`/products/${id}/variations`);
       setVariations(res.data);
       setShowVariations(true);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (err) { console.log(err); }
   };
 
-  const filteredProducts = products.filter(
-    (product) =>
-      product.productName
-        ?.toLowerCase()
-        .includes(search.toLowerCase()) ||
-      product.productCode
-        ?.toLowerCase()
-        .includes(search.toLowerCase()) ||
-      product.brand
-        ?.toLowerCase()
-        .includes(search.toLowerCase()) ||
-      product.genericName
-        ?.toLowerCase()
-        .includes(search.toLowerCase())
+  const filtered = products.filter((p) =>
+    p.productName?.toLowerCase().includes(search.toLowerCase()) ||
+    p.productCode?.toLowerCase().includes(search.toLowerCase()) ||
+    p.brand?.toLowerCase().includes(search.toLowerCase()) ||
+    p.genericName?.toLowerCase().includes(search.toLowerCase())
   );
+
+  const stockLevel = (qty) => {
+    if (qty < 5) return { color: "#f43f5e", bg: "rgba(244,63,94,0.1)", label: "Critical" };
+    if (qty < 20) return { color: "#f59e0b", bg: "rgba(245,158,11,0.1)", label: "Low" };
+    return { color: "#10b981", bg: "rgba(16,185,129,0.1)", label: "In Stock" };
+  };
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent:
-            "space-between",
-          alignItems: "center",
-          marginBottom: "25px",
-        }}
-      >
+      {/* Header */}
+      <div style={styles.header}>
         <div>
-          <h1>Products</h1>
-
-          <p
-            style={{
-              color: "#64748b",
-            }}
-          >
-            Product Management &
-            Intelligence
-          </p>
+          <h1 style={styles.pageTitle}>Products</h1>
+          <p style={styles.pageSub}>{products.length} products in catalog</p>
         </div>
-
-        <input
-          type="text"
-          placeholder="Search product..."
-          value={search}
-          onChange={(e) =>
-            setSearch(e.target.value)
-          }
-          style={{
-            width: "300px",
-          }}
-        />
+        <div style={styles.searchWrap}>
+          <FaSearch style={styles.searchIcon} size={12} />
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={styles.searchInput}
+          />
+        </div>
       </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns:
-            "repeat(auto-fit,minmax(320px,1fr))",
-          gap: "20px",
-        }}
-      >
-        {filteredProducts.map((product) => (
-          <div
-            key={product._id}
-            className="card"
-          >
-            <h3>{product.productName}</h3>
+      {/* Grid */}
+      <div style={styles.grid}>
+        {filtered.map((product) => {
+          const stock = stockLevel(product.availableQty);
+          return (
+            <div key={product._id} className="card" style={styles.productCard}>
+              {/* Top */}
+              <div style={styles.cardTop}>
+                <div style={styles.productIcon}>💊</div>
+                <span style={{ ...styles.stockBadge, color: stock.color, background: stock.bg }}>
+                  {stock.label}
+                </span>
+              </div>
 
-            <p>
-              <strong>Code:</strong>{" "}
-              {product.productCode}
-            </p>
+              <h3 style={styles.productName}>{product.productName}</h3>
 
-            <p>
-              <strong>Brand:</strong>{" "}
-              {product.brand}
-            </p>
+              <div style={styles.metaRow}>
+                <span style={styles.codeTag}>{product.productCode}</span>
+                <span style={styles.brandTag}>{product.brand}</span>
+              </div>
 
-            <p>
-              <strong>Generic:</strong>{" "}
-              {product.genericName}
-            </p>
+              <p style={styles.generic}>{product.genericName}</p>
 
-            <p>
-              <strong>Price:</strong> OMR
-              {product.unitPrice}
-            </p>
+              {/* Stats */}
+              <div style={styles.statsGrid}>
+                <div style={styles.statBlock}>
+                  <span style={styles.statLabel}>Price</span>
+                  <span style={styles.statValue}>OMR {product.unitPrice}</span>
+                </div>
+                <div style={styles.statBlock}>
+                  <span style={styles.statLabel}>Stock</span>
+                  <span style={{ ...styles.statValue, color: stock.color }}>{product.availableQty}</span>
+                </div>
+                <div style={styles.statBlock}>
+                  <span style={styles.statLabel}>Discount</span>
+                  <span style={styles.statValue}>{product.discountPercentage}%</span>
+                </div>
+                <div style={styles.statBlock}>
+                  <span style={styles.statLabel}>FOC</span>
+                  <span style={styles.statValue}>B{product.focBuyQty} G{product.focFreeQty}</span>
+                </div>
+              </div>
 
-            <p>
-              <strong>Stock:</strong>{" "}
-              {product.availableQty}
-            </p>
-
-            <p>
-              <strong>Discount:</strong>{" "}
-              {
-                product.discountPercentage
-              }
-              %
-            </p>
-
-            <p>
-              <strong>FOC:</strong>{" "}
-              Buy {product.focBuyQty}
-              Get {product.focFreeQty}
-            </p>
-
-            <div
-              style={{
-                display: "flex",
-                gap: "10px",
-                marginTop: "15px",
-                flexWrap: "wrap",
-              }}
-            >
-              <button
-                onClick={() =>
-                  viewDetails(product)
-                }
-                style={{
-                  background: "#2563eb",
-                  color: "white",
-                  padding: "8px 12px",
-                  borderRadius: "8px",
-                }}
-              >
-                Details
-              </button>
-
-              <button
-                onClick={() =>
-                  viewAlternatives(
-                    product._id
-                  )
-                }
-                style={{
-                  background: "#16a34a",
-                  color: "white",
-                  padding: "8px 12px",
-                  borderRadius: "8px",
-                }}
-              >
-                Alternatives
-              </button>
-
-              <button
-                onClick={() =>
-                  viewVariations(
-                    product._id
-                  )
-                }
-                style={{
-                  background: "#7c3aed",
-                  color: "white",
-                  padding: "8px 12px",
-                  borderRadius: "8px",
-                }}
-              >
-                Variations
-              </button>
+              <div style={styles.actions}>
+                <button style={styles.btnBlue} onClick={() => { setSelectedProduct(product); setShowDetails(true); }}>Details</button>
+                <button style={styles.btnGreen} onClick={() => viewAlternatives(product._id)}>Alternatives</button>
+                <button style={styles.btnPurple} onClick={() => viewVariations(product._id)}>Variations</button>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      {/* DETAILS */}
-
+      {/* Details Modal */}
       {showDetails && selectedProduct && (
-  <div
-    className="modal"
-    onClick={() => setShowDetails(false)}
-  >
-    <div
-      className="card"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <h2>Product Details</h2>
-
-      <p>
-        <strong>Product:</strong>{" "}
-        {selectedProduct.productName}
-      </p>
-
-      <p>
-        <strong>Brand:</strong>{" "}
-        {selectedProduct.brand}
-      </p>
-
-      <p>
-        <strong>Generic:</strong>{" "}
-        {selectedProduct.genericName}
-      </p>
-
-      <p>
-        <strong>Price:</strong> OMR
-        {selectedProduct.unitPrice}
-      </p>
-
-      <p>
-        <strong>Stock:</strong>{" "}
-        {selectedProduct.availableQty}
-      </p>
-
-      <button
-        onClick={() => setShowDetails(false)}
-      >
-        Close
-      </button>
-    </div>
-  </div>
-)}
-
-      {/* ALTERNATIVES */}
-
-     {showAlternatives && (
-  <div
-    className="modal"
-    onClick={() =>
-      setShowAlternatives(false)
-    }
-  >
-    <div
-      className="card"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <h2>Alternative Brands</h2>
-
-      {similarProducts.length === 0 ? (
-        <p>No alternatives found</p>
-      ) : (
-        similarProducts.map((product) => (
-          <div key={product._id}>
-            <p>
-              <strong>Product:</strong>{" "}
-              {product.productName}
-            </p>
-
-            <p>
-              <strong>Brand:</strong>{" "}
-              {product.brand}
-            </p>
-
-            <p>
-              <strong>Stock:</strong>{" "}
-              {product.availableQty}
-            </p>
-
-            <hr />
+        <div className="modal" onClick={() => setShowDetails(false)}>
+          <div className="card" onClick={(e) => e.stopPropagation()}>
+            <h2 style={styles.modalTitle}>Product Details</h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "16px" }}>
+              {[
+                ["Product", selectedProduct.productName],
+                ["Code", selectedProduct.productCode],
+                ["Brand", selectedProduct.brand],
+                ["Generic Name", selectedProduct.genericName],
+                ["Price", `OMR ${selectedProduct.unitPrice}`],
+                ["Available Stock", selectedProduct.availableQty],
+                ["Discount", `${selectedProduct.discountPercentage}%`],
+              ].map(([label, value]) => (
+                <div key={label} style={styles.detailRow}>
+                  <span style={styles.detailLabel}>{label}</span>
+                  <span style={styles.detailValue}>{value}</span>
+                </div>
+              ))}
+            </div>
+            <button style={{ ...styles.btnBlue, width: "100%", justifyContent: "center", marginTop: "20px" }}
+              onClick={() => setShowDetails(false)}>Close</button>
           </div>
-        ))
+        </div>
       )}
 
-      <button
-        onClick={() =>
-          setShowAlternatives(false)
-        }
-      >
-        Close
-      </button>
-    </div>
-  </div>
-)}
-{showVariations && (
-  <div
-    className="modal"
-    onClick={() =>
-      setShowVariations(false)
-    }
-  >
-    <div
-      className="card"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <h2>Product Variations</h2>
-
-      {variations.map((product) => (
-        <div key={product._id}>
-          <p>
-            <strong>Product:</strong>{" "}
-            {product.productName}
-          </p>
-
-          <p>
-            <strong>Brand:</strong>{" "}
-            {product.brand}
-          </p>
-
-          <hr />
+      {/* Alternatives Modal */}
+      {showAlternatives && (
+        <div className="modal" onClick={() => setShowAlternatives(false)}>
+          <div className="card" onClick={(e) => e.stopPropagation()}>
+            <h2 style={styles.modalTitle}>Alternative Brands</h2>
+            <div style={{ marginTop: "16px" }}>
+              {similarProducts.length === 0 ? (
+                <p style={{ color: "#475569", fontSize: "13px" }}>No alternatives found.</p>
+              ) : similarProducts.map((p) => (
+                <div key={p._id} style={styles.altRow}>
+                  <div>
+                    <p style={{ fontWeight: 600, color: "#e2e8f0", fontSize: "13.5px" }}>{p.productName}</p>
+                    <p style={{ color: "#64748b", fontSize: "12px", marginTop: "2px" }}>{p.brand}</p>
+                  </div>
+                  <div style={{ textAlign: "right" }}>
+                    <p style={{ color: "#10b981", fontWeight: 600, fontSize: "13px" }}>{p.availableQty} in stock</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button style={{ ...styles.btnBlue, width: "100%", justifyContent: "center", marginTop: "20px" }}
+              onClick={() => setShowAlternatives(false)}>Close</button>
+          </div>
         </div>
-      ))}
+      )}
 
-      <button
-        onClick={() =>
-          setShowVariations(false)
-        }
-      >
-        Close
-      </button>
-    </div>
-  </div>
-)}
+      {/* Variations Modal */}
+      {showVariations && (
+        <div className="modal" onClick={() => setShowVariations(false)}>
+          <div className="card" onClick={(e) => e.stopPropagation()}>
+            <h2 style={styles.modalTitle}>Product Variations</h2>
+            <div style={{ marginTop: "16px" }}>
+              {variations.length === 0 ? (
+                <p style={{ color: "#475569", fontSize: "13px" }}>No variations found.</p>
+              ) : variations.map((p) => (
+                <div key={p._id} style={styles.altRow}>
+                  <div>
+                    <p style={{ fontWeight: 600, color: "#e2e8f0", fontSize: "13.5px" }}>{p.productName}</p>
+                    <p style={{ color: "#64748b", fontSize: "12px" }}>{p.brand}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button style={{ ...styles.btnPurple, width: "100%", justifyContent: "center", marginTop: "20px" }}
+              onClick={() => setShowVariations(false)}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
+};
+
+const styles = {
+  header: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" },
+  pageTitle: { fontSize: "22px", fontWeight: "700", color: "#f1f5f9", letterSpacing: "-0.015em" },
+  pageSub: { fontSize: "12px", color: "#475569", marginTop: "3px" },
+  searchWrap: { position: "relative", width: "280px" },
+  searchIcon: { position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#475569" },
+  searchInput: { paddingLeft: "34px", background: "#111827", border: "1px solid rgba(255,255,255,0.08)" },
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+    gap: "16px",
+  },
+  productCard: { display: "flex", flexDirection: "column", gap: "12px" },
+  cardTop: { display: "flex", justifyContent: "space-between", alignItems: "center" },
+  productIcon: {
+    width: "36px", height: "36px", borderRadius: "10px",
+    background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.2)",
+    display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px",
+  },
+  stockBadge: {
+    fontSize: "11px", fontWeight: 600,
+    padding: "3px 9px", borderRadius: "99px",
+  },
+  productName: { fontSize: "14px", fontWeight: "700", color: "#f1f5f9", lineHeight: 1.3 },
+  metaRow: { display: "flex", gap: "8px", flexWrap: "wrap" },
+  codeTag: {
+    fontFamily: "'DM Mono', monospace", fontSize: "11px",
+    background: "rgba(59,130,246,0.08)", color: "#60a5fa",
+    padding: "2px 8px", borderRadius: "5px", border: "1px solid rgba(59,130,246,0.15)",
+  },
+  brandTag: {
+    fontSize: "11px", background: "rgba(255,255,255,0.05)",
+    color: "#94a3b8", padding: "2px 8px", borderRadius: "5px",
+    border: "1px solid rgba(255,255,255,0.08)",
+  },
+  generic: { fontSize: "12px", color: "#64748b" },
+  statsGrid: {
+    display: "grid", gridTemplateColumns: "1fr 1fr",
+    gap: "1px", background: "rgba(255,255,255,0.05)",
+    borderRadius: "10px", overflow: "hidden", border: "1px solid rgba(255,255,255,0.05)",
+  },
+  statBlock: {
+    display: "flex", flexDirection: "column", gap: "2px",
+    padding: "10px 12px", background: "#0d1117",
+  },
+  statLabel: { fontSize: "10px", color: "#475569", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em" },
+  statValue: { fontSize: "14px", fontWeight: "600", color: "#e2e8f0", fontVariantNumeric: "tabular-nums" },
+  actions: { display: "flex", gap: "8px", flexWrap: "wrap", marginTop: "4px" },
+  btnBlue: {
+    flex: 1, justifyContent: "center",
+    background: "rgba(37,99,235,0.12)", color: "#60a5fa",
+    border: "1px solid rgba(59,130,246,0.2)", padding: "8px 12px",
+    borderRadius: "8px", fontSize: "12px", fontWeight: 500,
+  },
+  btnGreen: {
+    flex: 1, justifyContent: "center",
+    background: "rgba(16,185,129,0.1)", color: "#34d399",
+    border: "1px solid rgba(16,185,129,0.2)", padding: "8px 12px",
+    borderRadius: "8px", fontSize: "12px", fontWeight: 500,
+  },
+  btnPurple: {
+    flex: 1, justifyContent: "center",
+    background: "rgba(139,92,246,0.1)", color: "#a78bfa",
+    border: "1px solid rgba(139,92,246,0.2)", padding: "8px 12px",
+    borderRadius: "8px", fontSize: "12px", fontWeight: 500,
+  },
+  modalTitle: { fontSize: "17px", fontWeight: "700", color: "#f1f5f9" },
+  detailRow: {
+    display: "flex", justifyContent: "space-between",
+    padding: "9px 0", borderBottom: "1px solid rgba(255,255,255,0.05)",
+  },
+  detailLabel: { fontSize: "12px", color: "#475569" },
+  detailValue: { fontSize: "13px", color: "#e2e8f0", fontWeight: 500 },
+  altRow: {
+    display: "flex", justifyContent: "space-between", alignItems: "center",
+    padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.05)",
+  },
 };
 
 export default Products;

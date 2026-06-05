@@ -4,33 +4,15 @@ import Navbar from "../components/Navbar";
 
 const MainLayout = () => {
   return (
-    <div
-      style={{
-        display: "flex",
-        minHeight: "100vh",
-        background: "#f8fafc",
-      }}
-    >
+    <div style={{ display: "flex", minHeight: "100vh", background: "#07090f" }}>
       <Sidebar />
-
-     <div
-  style={{
-    flex: 1,
-
-    marginLeft: "270px",
-
-    minWidth: 0,
-  }}
->
+      <div style={{ flex: 1, marginLeft: "268px", minWidth: 0, display: "flex", flexDirection: "column" }}>
         <Navbar />
-
-        <div
-          style={{
-            padding: "24px",
-          }}
-        >
-          <Outlet />
-        </div>
+        <main style={{ flex: 1, padding: "28px 28px 40px", maxWidth: "1400px", width: "100%" }}>
+          <div className="page-enter">
+            <Outlet />
+          </div>
+        </main>
       </div>
     </div>
   );
