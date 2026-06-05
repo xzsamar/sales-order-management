@@ -41,7 +41,7 @@ const products = [
     brand: "Sun Pharma",
     category: "Syrup",
     unitPrice: 2.750,
-    discountPercentage: 0,
+    discountPercentage: 20,
     focBuyQty: 0,
     focFreeQty: 0,
     availableQty: 50,
@@ -56,7 +56,7 @@ const products = [
     brand: "Pfizer",
     category: "Capsule",
     unitPrice: 3.500,
-    discountPercentage: 10,
+    discountPercentage: 15,
     focBuyQty: 20,
     focFreeQty: 2,
     availableQty: 75,
@@ -71,7 +71,7 @@ const products = [
     brand: "Nature's Bounty",
     category: "Supplement",
     unitPrice: 2.250,
-    discountPercentage: 0,
+    discountPercentage: 5,
     focBuyQty: 0,
     focFreeQty: 0,
     availableQty: 120,
@@ -116,9 +116,9 @@ const products = [
     brand: "Refresh",
     category: "Drops",
     unitPrice: 1.800,
-    discountPercentage: 0,
-    focBuyQty: 0,
-    focFreeQty: 0,
+    discountPercentage: 15,
+    focBuyQty: 20,
+    focFreeQty: 2,
     availableQty: 90,
     reservedQty: 0,
     status: "Active",
@@ -131,9 +131,9 @@ const products = [
     brand: "Novo Nordisk",
     category: "Injection",
     unitPrice: 8.500,
-    discountPercentage: 3,
-    focBuyQty: 0,
-    focFreeQty: 0,
+    discountPercentage: 10,
+    focBuyQty: 10,
+    focFreeQty: 2,
     availableQty: 40,
     reservedQty: 0,
     status: "Active",
@@ -160,6 +160,11 @@ const products = [
   brand: "Cipla",
   category: "Tablet",
   unitPrice: 4.500,
+  unitPrice: 5.000,
+    discountPercentage: 5,
+    focBuyQty: 10,
+    focFreeQty: 1,
+    availableQty: 60,
   availableQty: 90,
   status: "Active",
 },
@@ -374,36 +379,7 @@ const products = [
 }
 
 ];
-const seedData = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URI);
 
-    console.log("✅ MongoDB Connected");
-
-    await Product.deleteMany();
-    await Customer.deleteMany();
-
-    console.log("🗑 Old data removed");
-
-    await Product.insertMany(products);
-    await Customer.insertMany(customers);
-
-    console.log(
-      `✅ ${products.length} products inserted`
-    );
-
-    console.log(
-      `✅ ${customers.length} customers inserted`
-    );
-
-    console.log("🎉 Seed completed");
-
-    process.exit(0);
-  } catch (error) {
-    console.error(error);
-    process.exit(1);
-  }
-};
 const customers = [
   {
     customerCode: "C001",
@@ -484,5 +460,36 @@ const customers = [
   status: "Active",
 }
 ];
+
+const seedData = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+
+    console.log("✅ MongoDB Connected");
+
+    await Product.deleteMany();
+    await Customer.deleteMany();
+
+    console.log("🗑 Old data removed");
+
+    await Product.insertMany(products);
+    await Customer.insertMany(customers);
+
+    console.log(
+      `✅ ${products.length} products inserted`
+    );
+
+    console.log(
+      `✅ ${customers.length} customers inserted`
+    );
+
+    console.log("🎉 Seed completed");
+
+    process.exit(0);
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+};
 
 seedData();
