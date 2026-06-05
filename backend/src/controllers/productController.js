@@ -146,9 +146,8 @@ const getVariations = async (req, res) => {
     }
 
     const variations = await Product.find({
-  productName: product.productName,
-  _id: { $ne: product._id },
-});
+      genericName: product.genericName,
+    });
 
     res.status(200).json(variations);
   } catch (error) {
