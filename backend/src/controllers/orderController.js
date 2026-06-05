@@ -140,26 +140,16 @@ const createOrder = async (req, res) => {
     }
 
     const grandTotal =
-      grossAmount - totalDiscount;
+  grossAmount - totalDiscount;
 
-      const totalExposure =
+const totalExposure =
   (customerData.outstandingAmount || 0) +
   grandTotal;
 
 if (
   totalExposure >
   (customerData.creditLimit || 0)
-) 
- for (const item of orderItems) {
-  const product = await Product.findById(
-    item.product
-  );
-
-  product.availableQty -= item.quantity;
-
-  await product.save();
-}
-{
+) {
   return res.status(400).json({
     message:
       `Credit limit exceeded.\n` +
@@ -169,7 +159,6 @@ if (
       `Total Exposure: OMR ${totalExposure.toFixed(3)}`
   });
 }
-
     const bookingNumber = `SO-${Date.now()}`;
 
     const order = await Order.create({
@@ -184,7 +173,16 @@ if (
   totalFOC,
   grandTotal,
 });
+   
+for (const item of orderItems) {
+  const product = await Product.findById(
+    item.product
+  );
 
+  product.availableQty -= item.quantity;
+
+  await product.save();
+}
 customerData.outstandingAmount =
   (customerData.outstandingAmount || 0) +
   grandTotal;
