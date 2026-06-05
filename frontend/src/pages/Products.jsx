@@ -66,13 +66,14 @@ const Products = () => {
   };
 
   const stockLevel = (qty) => {
-    if (qty < 5) return { color: "#f43f5e", bg: "rgba(244,63,94,0.1)", label: "Critical" };
-    if (qty < 20) return { color: "#f59e0b", bg: "rgba(245,158,11,0.1)", label: "Low" };
+    if (qty < 5) return { color: "#f43f5e", bg: "rgba(244,63,94,0.1)", label: "Out of Stock" };
+    if (qty < 20) return { color: "#f59e0b", bg: "rgba(245,158,11,0.1)", label: "Low Stock" };
     return { color: "#10b981", bg: "rgba(16,185,129,0.1)", label: "In Stock" };
   };
 
   return (
     <div>
+
       {/* Header */}
       <div style={styles.header}>
         <div>
