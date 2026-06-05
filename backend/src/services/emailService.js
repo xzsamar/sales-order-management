@@ -40,14 +40,10 @@ const sendOrderEmail = async (order, pdfPath) => {
 
 console.log("Email sent:", info.messageId);
 
-    const info = await transporter.sendMail(
-      mailOptions
-    );
+    
+    
 
-    console.log(
-      "Email sent:",
-      info.messageId
-    );
+    
   } catch (error) {
     console.error(
       "EMAIL ERROR:",
