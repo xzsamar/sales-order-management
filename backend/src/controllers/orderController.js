@@ -136,9 +136,7 @@ const createOrder = async (req, res) => {
         lineTotal,
       });
 
-      product.availableQty -= item.quantity;
-
-      await product.save();
+      
     }
 
     const grandTotal =
@@ -151,7 +149,17 @@ const createOrder = async (req, res) => {
 if (
   totalExposure >
   (customerData.creditLimit || 0)
-) {
+) 
+ for (const item of orderItems) {
+  const product = await Product.findById(
+    item.product
+  );
+
+  product.availableQty -= item.quantity;
+
+  await product.save();
+}
+{
   return res.status(400).json({
     message:
       `Credit limit exceeded.\n` +
