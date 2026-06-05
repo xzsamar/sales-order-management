@@ -39,7 +39,7 @@ console.log(
 
     console.log("Verifying SMTP...");
 
-await transporter.verify();
+await Promise.r
 
 console.log("SMTP verified!");
 
