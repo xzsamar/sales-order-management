@@ -161,7 +161,8 @@ const createOrder = async (req, res) => {
 
 const populatedOrder =
   await Order.findById(order._id)
-    .populate("customer");
+    .populate("customer")
+    .populate("items.product");
 
 console.log(
   "Order saved:",
