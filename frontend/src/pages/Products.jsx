@@ -11,6 +11,8 @@ const Products = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [showAlternatives, setShowAlternatives] = useState(false);
   const [showVariations, setShowVariations] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
   useEffect(() => { fetchProducts(); }, []);
 
@@ -44,6 +46,25 @@ const Products = () => {
     p.genericName?.toLowerCase().includes(search.toLowerCase())
   );
 
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const paginated = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
+  const goToPage = (page) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Build page number range (show at most 5 pages around current)
+  const getPageNumbers = () => {
+    const pages = [];
+    const delta = 2;
+    const left = Math.max(1, currentPage - delta);
+    const right = Math.min(totalPages, currentPage + delta);
+    for (let i = left; i <= right; i++) pages.push(i);
+    return pages;
+  };
+
   const stockLevel = (qty) => {
     if (qty < 5) return { color: "#f43f5e", bg: "rgba(244,63,94,0.1)", label: "Critical" };
     if (qty < 20) return { color: "#f59e0b", bg: "rgba(245,158,11,0.1)", label: "Low" };
@@ -56,7 +77,11 @@ const Products = () => {
       <div style={styles.header}>
         <div>
           <h1 style={styles.pageTitle}>Products</h1>
-          <p style={styles.pageSub}>{products.length} products in catalog</p>
+          <p style={styles.pageSub}>
+            {filtered.length === products.length
+              ? `${products.length} products in catalog`
+              : `${filtered.length} results · showing ${Math.min((currentPage - 1) * ITEMS_PER_PAGE + 1, filtered.length)}–${Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)}`}
+          </p>
         </div>
         <div style={styles.searchWrap}>
           <FaSearch style={styles.searchIcon} size={12} />
@@ -64,7 +89,7 @@ const Products = () => {
             type="text"
             placeholder="Search products..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
             style={styles.searchInput}
           />
         </div>
@@ -72,7 +97,7 @@ const Products = () => {
 
       {/* Grid */}
       <div style={styles.grid}>
-        {filtered.map((product) => {
+        {paginated.map((product) => {
           const stock = stockLevel(product.availableQty);
           return (
             <div key={product._id} className="card" style={styles.productCard}>
@@ -123,7 +148,59 @@ const Products = () => {
         })}
       </div>
 
-      {/* Details Modal */}
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div style={styles.pagination}>
+          <span style={styles.pageInfo}>
+            Page {currentPage} of {totalPages}
+          </span>
+          <div style={styles.pageControls}>
+            <button
+              style={{ ...styles.pageBtn, ...(currentPage === 1 ? styles.pageBtnDisabled : {}) }}
+              onClick={() => goToPage(1)}
+              disabled={currentPage === 1}
+            >«</button>
+            <button
+              style={{ ...styles.pageBtn, ...(currentPage === 1 ? styles.pageBtnDisabled : {}) }}
+              onClick={() => goToPage(currentPage - 1)}
+              disabled={currentPage === 1}
+            >‹</button>
+
+            {getPageNumbers()[0] > 1 && (
+              <>
+                <button style={styles.pageBtn} onClick={() => goToPage(1)}>1</button>
+                {getPageNumbers()[0] > 2 && <span style={styles.pageDots}>…</span>}
+              </>
+            )}
+
+            {getPageNumbers().map((page) => (
+              <button
+                key={page}
+                style={{ ...styles.pageBtn, ...(page === currentPage ? styles.pageBtnActive : {}) }}
+                onClick={() => goToPage(page)}
+              >{page}</button>
+            ))}
+
+            {getPageNumbers()[getPageNumbers().length - 1] < totalPages && (
+              <>
+                {getPageNumbers()[getPageNumbers().length - 1] < totalPages - 1 && <span style={styles.pageDots}>…</span>}
+                <button style={styles.pageBtn} onClick={() => goToPage(totalPages)}>{totalPages}</button>
+              </>
+            )}
+
+            <button
+              style={{ ...styles.pageBtn, ...(currentPage === totalPages ? styles.pageBtnDisabled : {}) }}
+              onClick={() => goToPage(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >›</button>
+            <button
+              style={{ ...styles.pageBtn, ...(currentPage === totalPages ? styles.pageBtnDisabled : {}) }}
+              onClick={() => goToPage(totalPages)}
+              disabled={currentPage === totalPages}
+            >»</button>
+          </div>
+        </div>
+      )}
       {showDetails && selectedProduct && (
         <div className="modal" onClick={() => setShowDetails(false)}>
           <div className="card" onClick={(e) => e.stopPropagation()}>
@@ -279,6 +356,29 @@ const styles = {
     display: "flex", justifyContent: "space-between", alignItems: "center",
     padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.05)",
   },
+  pagination: {
+    display: "flex", justifyContent: "space-between", alignItems: "center",
+    marginTop: "28px", paddingTop: "20px",
+    borderTop: "1px solid rgba(255,255,255,0.07)",
+  },
+  pageInfo: { fontSize: "12px", color: "#475569" },
+  pageControls: { display: "flex", alignItems: "center", gap: "4px" },
+  pageBtn: {
+    minWidth: "32px", height: "32px", padding: "0 8px",
+    borderRadius: "8px", fontSize: "13px", fontWeight: 500,
+    background: "rgba(255,255,255,0.05)", color: "#94a3b8",
+    border: "1px solid rgba(255,255,255,0.08)", cursor: "pointer",
+    display: "flex", alignItems: "center", justifyContent: "center",
+    transition: "all 0.15s",
+  },
+  pageBtnActive: {
+    background: "rgba(37,99,235,0.2)", color: "#60a5fa",
+    border: "1px solid rgba(59,130,246,0.4)",
+  },
+  pageBtnDisabled: {
+    opacity: 0.3, cursor: "not-allowed",
+  },
+  pageDots: { fontSize: "13px", color: "#475569", padding: "0 4px" },
 };
 
 export default Products;
