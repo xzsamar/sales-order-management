@@ -134,7 +134,7 @@ const Products = () => {
                 </div>
                 <div style={styles.statBlock}>
                   <span style={styles.statLabel}>FOC</span>
-                  <span style={styles.statValue}>B{product.focBuyQty} G{product.focFreeQty}</span>
+                  <span style={styles.statValue}>Buy{product.focBuyQty} Get{product.focFreeQty}</span>
                 </div>
               </div>
 

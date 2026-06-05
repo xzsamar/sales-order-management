@@ -194,7 +194,7 @@ setOrderNumber(
 setShowSuccess(true);
 
 toast.success(
-  `Order ${res.data.bookingNumber} created successfully!`
+  `Order ${res.data.bookingNumber} created successfully. PDF email notification sent.`
 );
 
 setCustomer("");
