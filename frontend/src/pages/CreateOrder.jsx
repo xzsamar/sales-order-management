@@ -628,7 +628,7 @@ loadData();
       </h2>
 
       <p>
-        Booking Number
+        Order Number
       </p>
 
       <div className="success-order">

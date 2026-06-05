@@ -74,7 +74,7 @@ const generatePDFBuffer = (order) => {
       .font("Helvetica-Bold")
       .text("SALES ORDER", MARGIN + 8, 20);
 
-    // Booking number badge
+    // Order Number badge
     const bn = order.bookingNumber || "—";
     doc
       .fontSize(9)

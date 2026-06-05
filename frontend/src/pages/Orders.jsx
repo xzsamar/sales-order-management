@@ -65,7 +65,7 @@ const Orders = () => {
         </div>
         <input
           type="text"
-          placeholder="Search booking number..."
+          placeholder="Search Order Number..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           style={styles.filterInput}
