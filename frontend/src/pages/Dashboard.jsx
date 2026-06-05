@@ -47,10 +47,37 @@ const Dashboard = () => {
 
       {/* KPI Cards */}
       <div style={styles.kpiGrid}>
-        <StatCard title="Total Customers" value={stats.customers} icon={<FaUsers />} accent="blue" />
-        <StatCard title="Products Listed" value={stats.products}  icon={<FaBox />}   accent="green" />
-        <StatCard title="Orders Placed"   value={stats.orders}    icon={<FaShoppingCart />} accent="orange" />
-        <StatCard title="Total Revenue"   value={`OMR ${stats.revenue.toFixed(3)}`} icon={<FaMoneyBillWave />} accent="purple" />
+        <StatCard
+  title="Total Customers"
+  value={loading ? "..." : stats.customers}
+  icon={<FaUsers />}
+  accent="blue"
+/>
+
+<StatCard
+  title="Products Listed"
+  value={loading ? "..." : stats.products}
+  icon={<FaBox />}
+  accent="green"
+/>
+
+<StatCard
+  title="Orders Placed"
+  value={loading ? "..." : stats.orders}
+  icon={<FaShoppingCart />}
+  accent="orange"
+/>
+
+<StatCard
+  title="Total Revenue"
+  value={
+    loading
+      ? "..."
+      : `OMR ${stats.revenue.toFixed(3)}`
+  }
+  icon={<FaMoneyBillWave />}
+  accent="purple"
+/>
       </div>
 
       {/* Main grid */}
@@ -61,9 +88,15 @@ const Dashboard = () => {
             <h2 style={styles.cardTitle}>Recent Orders</h2>
             <span style={{ fontSize: "12px", color: "#475569" }}>Last 5</span>
           </div>
-          {recentOrders.length === 0 ? (
-            <p style={{ color: "#475569", fontSize: "13px", padding: "20px 0" }}>No orders found</p>
-          ) : (
+          {loading ? (
+  <p style={{ color: "#64748b" }}>
+    Loading orders...
+  </p>
+) : recentOrders.length === 0 ? (
+  <p style={{ color: "#64748b" }}>
+    No orders found
+  </p>
+) : (
             <table>
               <thead>
                 <tr>
@@ -99,7 +132,11 @@ const Dashboard = () => {
               </span>
             )}
           </div>
-          {lowStockProducts.length === 0 ? (
+          {loading ? (
+  <p style={{ color: "#64748b" }}>
+    Loading inventory...
+  </p>
+) : lowStockProducts.length === 0 ? (
             <div style={styles.allGood}>
               <span style={{ fontSize: "24px" }}>✅</span>
               <p>All products well stocked</p>
