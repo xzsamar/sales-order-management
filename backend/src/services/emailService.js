@@ -32,6 +32,12 @@ console.log(
       },
     });
 
+    console.log("Verifying SMTP...");
+
+await transporter.verify();
+
+console.log("SMTP verified!");
+
     const mailOptions = {
   from: process.env.EMAIL_USER,
 
@@ -57,12 +63,12 @@ console.log(
     <p>Please find the attached PDF.</p>
   `,
 
-  attachments: [
-    {
-      filename: `${order.bookingNumber}.pdf`,
-      path: pdfPath,
-    },
-  ],
+  //attachments: [
+    //{
+      //filename: `${order.bookingNumber}.pdf`,
+      //path: pdfPath,
+    //},
+  //],
 };
 
     await transporter.sendMail(mailOptions);
