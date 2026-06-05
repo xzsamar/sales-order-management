@@ -23,6 +23,11 @@ console.log(
   "PDF Path:",
   pdfPath
 );
+
+console.log(
+  "EMAIL_PASS exists:",
+  !!process.env.EMAIL_PASS
+);
     const transporter = nodemailer.createTransport({
       service: "gmail",
 
