@@ -147,25 +147,40 @@ const createOrder = async (req, res) => {
     const bookingNumber = `SO-${Date.now()}`;
 
     const order = await Order.create({
-      bookingNumber,
-      customer,
-      salesPerson,
-      deliveryDate,
-      remarks,
-      items: orderItems,
-      grossAmount,
-      totalDiscount,
-      totalFOC,
-      grandTotal,
-    });
+  bookingNumber,
+  customer,
+  salesPerson,
+  deliveryDate,
+  remarks,
+  items: orderItems,
+  grossAmount,
+  totalDiscount,
+  totalFOC,
+  grandTotal,
+});
 
-    const populatedOrder =
-      await Order.findById(order._id)
-        .populate("customer");
+const populatedOrder =
+  await Order.findById(order._id)
+    .populate("customer");
 
-    sendOrderEmail(order).catch(console.error);
+res.status(201).json(order);
 
-    return res.status(201).json(order);
+setImmediate(async () => {
+  try {
+    const populatedOrder = await Order.findById(order._id)
+      .populate("customer");
+
+    await sendOrderEmail(
+      populatedOrder,
+      pdfPath // whatever PDF path you're using
+    );
+
+    console.log("Email sent");
+  } catch (error) {
+    console.error(error);
+  }
+});
+return;
   } catch (error) {
     res.status(500).json({
       message: error.message,
