@@ -1,86 +1,71 @@
 const nodemailer = require("nodemailer");
 
-const sendOrderEmail = async (
-  order,
-  pdfPath
-) => {
+const sendOrderEmail = async (order, pdfPath) => {
   try {
+    console.log("EMAIL_USER:", process.env.EMAIL_USER);
+    console.log("OWNER_EMAIL:", process.env.OWNER_EMAIL);
     console.log(
-  "sendOrderEmail called"
-);
+      "EMAIL_PASS length:",
+      process.env.EMAIL_PASS?.length
+    );
 
-console.log(
-  "OWNER_EMAIL:",
-  process.env.OWNER_EMAIL
-);
-
-console.log(
-  "EMAIL_USER:",
-  process.env.EMAIL_USER
-);
-
-console.log(
-  "PDF Path:",
-  pdfPath
-);
-
-console.log(
-  "EMAIL_PASS exists:",
-  !!process.env.EMAIL_PASS
-);
     const transporter = nodemailer.createTransport({
-      service: "gmail",
-
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 10000,
     });
 
     console.log("Verifying SMTP...");
 
-await Promise.r
+    await transporter.verify();
 
-console.log("SMTP verified!");
+    console.log("SMTP verified!");
 
     const mailOptions = {
-  from: process.env.EMAIL_USER,
+      from: process.env.EMAIL_USER,
+      to: process.env.OWNER_EMAIL,
+      subject: `New Sales Order - ${order.bookingNumber}`,
 
-  to: process.env.OWNER_EMAIL,
+      html: `
+        <h2>Sales Order Created</h2>
+        <p><strong>Order Number:</strong> ${order.bookingNumber}</p>
+        <p><strong>Customer:</strong> ${order.customer.customerName}</p>
+        <p><strong>Sales Person:</strong> ${order.salesPerson}</p>
+        <p><strong>Grand Total:</strong> OMR ${order.grandTotal}</p>
+      `,
 
-  subject: `New Sales Order - ${order.bookingNumber}`,
+      attachments: pdfPath
+        ? [
+            {
+              filename: `${order.bookingNumber}.pdf`,
+              path: pdfPath,
+            },
+          ]
+        : [],
+    };
 
-  html: `
-    <h2>Sales Order Created</h2>
+    console.log("Sending email...");
 
-    <p><strong>Order Number:</strong> ${order.bookingNumber}</p>
+    const info = await transporter.sendMail(
+      mailOptions
+    );
 
-    <p><strong>Customer:</strong> ${order.customer.customerName}</p>
-
-    <p><strong>Sales Person:</strong> ${order.salesPerson}</p>
-
-    <p><strong>Delivery Date:</strong> ${new Date(
-      order.deliveryDate
-    ).toDateString()}</p>
-
-    <p><strong>Grand Total:</strong> OMR ${order.grandTotal}</p>
-
-    <p>Please find the attached PDF.</p>
-  `,
-
-  //attachments: [
-    //{
-      //filename: `${order.bookingNumber}.pdf`,
-      //path: pdfPath,
-    //},
-  //],
-};
-
-    await transporter.sendMail(mailOptions);
-
-    console.log("✅ Email Sent");
+    console.log(
+      "Email sent:",
+      info.messageId
+    );
   } catch (error) {
-    console.log("Email Error:", error);
+    console.error(
+      "EMAIL ERROR:",
+      error
+    );
   }
 };
 
