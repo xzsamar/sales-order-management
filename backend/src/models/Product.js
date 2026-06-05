@@ -64,6 +64,7 @@ const productSchema = new mongoose.Schema(
       default: "Active",
     },
   },
+    
   {
     timestamps: true,
   }
