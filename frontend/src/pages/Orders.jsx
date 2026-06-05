@@ -117,7 +117,7 @@ const Orders = () => {
                 <td style={{ color: "#94a3b8" }}>{order.salesPerson}</td>
                 <td style={{ color: "#64748b" }}>
                   {new Date(order.deliveryDate).toLocaleDateString("en-GB", {
-                    day: "2-digit-", month: "-short-", year: "numeric",
+                    day: "2-digit", month: "short", year: "numeric",
                   })}
                 </td>
                 <td style={{ textAlign: "right" }}>
