@@ -13,44 +13,32 @@ const sendOrderEmail = async (order, pdfPath) => {
   host: "smtp.gmail.com",
   port: 587,
   secure: false,
-  requireTLS: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-  family: 4, // Force IPv4
+  tls: {
+    rejectUnauthorized: false,
+  },
 });
 
     console.log("Verifying SMTP...");
 
-    await transporter.verify();
+    
 
     console.log("SMTP verified!");
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: process.env.OWNER_EMAIL,
-      subject: `New Sales Order - ${order.bookingNumber}`,
-
-      html: `
-        <h2>Sales Order Created</h2>
-        <p><strong>Order Number:</strong> ${order.bookingNumber}</p>
-        <p><strong>Customer:</strong> ${order.customer.customerName}</p>
-        <p><strong>Sales Person:</strong> ${order.salesPerson}</p>
-        <p><strong>Grand Total:</strong> OMR ${order.grandTotal}</p>
-      `,
-
-      attachments: pdfPath
-        ? [
-            {
-              filename: `${order.bookingNumber}.pdf`,
-              path: pdfPath,
-            },
-          ]
-        : [],
-    };
-
+  from: process.env.EMAIL_USER,
+  to: process.env.OWNER_EMAIL,
+  subject: "Test Email",
+  text: "Hello from Render",
+};
     console.log("Sending email...");
+
+    const info = await transporter.sendMail(mailOptions);
+
+console.log("Email sent:", info.messageId);
 
     const info = await transporter.sendMail(
       mailOptions
