@@ -36,7 +36,15 @@ const sendOrderEmail = async (order, pdfPath) => {
 };
     console.log("Sending email...");
 
-    const info = await transporter.sendMail(mailOptions);
+    const info = await Promise.race([
+  transporter.sendMail(mailOptions),
+  new Promise((_, reject) =>
+    setTimeout(
+      () => reject(new Error("SendMail Timeout")),
+      15000
+    )
+  ),
+]);
 
 console.log("Email sent:", info.messageId);
 
