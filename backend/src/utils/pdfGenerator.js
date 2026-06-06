@@ -79,7 +79,7 @@ const generateOrderPDF = (order, res) => {
       .fontSize(11)
       .fillColor(COLORS.white)
       .font("Helvetica-Bold")
-      .text("Tech Ecosystem LLC", 0, 22, { width: PAGE_W - MARGIN, align: "right" });
+      .text("Oman Pharma", 0, 22, { width: PAGE_W - MARGIN, align: "right" });
 
     doc
       .fontSize(9)
