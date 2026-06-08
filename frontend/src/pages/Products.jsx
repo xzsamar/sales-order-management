@@ -115,10 +115,42 @@ const Products = () => {
             style={styles.searchInput}
           />
         </div>
+        
       </div>
+      
 
       {/* Grid */}
+      {/* Add Product Section */}
+<div>
+  <input
+    type="text"
+    placeholder="Product Name"
+    value={productName}
+    onChange={(e) => setProductName(e.target.value)}
+  />
+
+  <input
+    type="number"
+    placeholder="Unit Price"
+    value={unitPrice}
+    onChange={(e) => setUnitPrice(e.target.value)}
+  />
+
+  <input
+    type="number"
+    placeholder="Stock"
+    value={stock}
+    onChange={(e) => setStock(e.target.value)}
+  />
+
+  <button onClick={addProduct}>
+    Add Product
+  </button>
+</div>
+
+
       <div style={styles.grid}>
+        
         {paginated.map((product) => {
           const stock = stockLevel(product.availableQty);
           return (
@@ -132,70 +164,7 @@ const Products = () => {
                 </span>
               </div>
               {/* Add Product Form */}
-<div
-  style={{
-    display: "flex",
-    gap: "10px",
-    marginBottom: "20px",
-    flexWrap: "wrap",
-  }}
->
-  <input
-    type="text"
-    placeholder="Product Name"
-    value={productName}
-    onChange={(e) => setProductName(e.target.value)}
-    style={{
-      padding: "10px",
-      borderRadius: "8px",
-      border: "1px solid #374151",
-      background: "#111827",
-      color: "#fff",
-    }}
-  />
 
-  <input
-    type="number"
-    placeholder="Unit Price"
-    value={unitPrice}
-    onChange={(e) => setUnitPrice(e.target.value)}
-    style={{
-      padding: "10px",
-      borderRadius: "8px",
-      border: "1px solid #374151",
-      background: "#111827",
-      color: "#fff",
-    }}
-  />
-
-  <input
-    type="number"
-    placeholder="Stock"
-    value={stock}
-    onChange={(e) => setStock(e.target.value)}
-    style={{
-      padding: "10px",
-      borderRadius: "8px",
-      border: "1px solid #374151",
-      background: "#111827",
-      color: "#fff",
-    }}
-  />
-
-  <button
-    onClick={addProduct}
-    style={{
-      padding: "10px 20px",
-      borderRadius: "8px",
-      border: "none",
-      background: "#2563eb",
-      color: "#fff",
-      cursor: "pointer",
-    }}
-  >
-    Add Product
-  </button>
-</div>
 
               <h3 style={styles.productName}>{product.productName}</h3>
 
@@ -207,7 +176,9 @@ const Products = () => {
               <p style={styles.generic}>{product.genericName}</p>
 
               {/* Stats */}
-              
+              <button onClick={addProduct}>
+                Add Product
+              </button>
               <div style={styles.statsGrid}>
                 <div style={styles.statBlock}>
                   <span style={styles.statLabel}>Price</span>
