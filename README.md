@@ -148,12 +148,6 @@ Example:
 
 ## Installation
 
-### Clone Repository
-
-```bash
-
-```
-
 ### Install Backend Dependencies
 
 ```bash
