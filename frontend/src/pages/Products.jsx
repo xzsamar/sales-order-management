@@ -207,9 +207,7 @@ const Products = () => {
               <p style={styles.generic}>{product.genericName}</p>
 
               {/* Stats */}
-              <button onClick={addProduct}>
-                Add Product
-              </button>
+              
               <div style={styles.statsGrid}>
                 <div style={styles.statBlock}>
                   <span style={styles.statLabel}>Price</span>
