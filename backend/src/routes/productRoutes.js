@@ -2,6 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 
+
 const {
   getProducts,
   searchProducts,
@@ -14,6 +15,8 @@ const {
 // Product Management
 router.get("/", getProducts);
 router.get("/search", searchProducts);
+router.get("/products", getProducts);
+router.post("/products", createProducts);
 
 // Product Intelligence
 router.get("/compare", compareProducts);
