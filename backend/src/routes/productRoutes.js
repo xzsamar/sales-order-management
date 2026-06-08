@@ -16,7 +16,7 @@ const {
 router.get("/", getProducts);
 router.get("/search", searchProducts);
 router.get("/products", getProducts);
-router.post("/products", createProducts);
+router.post("/products", createProduct);
 
 // Product Intelligence
 router.get("/compare", compareProducts);
