@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
 
-const productSchema = new mongoose.Schema(
-  {
-    productCode: {
-      type: String,
+const productSchema = new mongoose.Schema({
+  productCode: {    
+      type: String, 
       required: true,
       unique: true,
     },
@@ -73,11 +72,23 @@ dosageForm: {
       enum: ["Active", "Inactive"],
       default: "Active",
     },
+     
+    unitPrice: {
+      type: Number,
+      required: true,
+
+    },
+     stock: {
+      type: Number,
+      default: 0,
+    },
   },
+  
     
   {
     timestamps: true,
   }
+
 );
 
 module.exports = mongoose.model("Product", productSchema);

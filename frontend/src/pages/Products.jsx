@@ -12,6 +12,9 @@ const Products = () => {
   const [showAlternatives, setShowAlternatives] = useState(false);
   const [showVariations, setShowVariations] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [productName, setProductName] = usestate("");
+  const [unitPrice, setUnitPrice] = usestate("");
+  const [stock, setStock] = usestate("");
   const ITEMS_PER_PAGE = 10;
 
   useEffect(() => { fetchProducts(); }, []);
@@ -38,6 +41,24 @@ const Products = () => {
       setShowVariations(true);
     } catch (err) { console.log(err); }
   };
+
+  const addProduct = async () => {
+    try {
+      await API.post("/products", {
+        productName,
+        unitPrice,
+        stock,
+      });
+      alert("Product added successfully!");
+      setProductName("");
+      setUnitPrice("");
+      setStock("");
+    } catch (error) {
+      console.log(error);
+      alert("Failed to add product. Please try again.");
+    }
+    };
+  
 
   const filtered = products.filter((p) =>
     p.productName?.toLowerCase().includes(search.toLowerCase()) ||
@@ -120,6 +141,9 @@ const Products = () => {
               <p style={styles.generic}>{product.genericName}</p>
 
               {/* Stats */}
+              <button onClick={addproduct}>
+                Add Product
+              </button>
               <div style={styles.statsGrid}>
                 <div style={styles.statBlock}>
                   <span style={styles.statLabel}>Price</span>

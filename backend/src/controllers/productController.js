@@ -12,6 +12,22 @@ const getProducts = async (req, res) => {
     });
   }
 };
+const createProduct = async (req, res) => {
+  try {
+  const product = await Product.create({
+    productCode: req.body.productCode,
+    unitPrice: req.body.unitPrice,
+    stock: req.body.stock,
+  });
+  
+  res.status(201).json(product);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 
 // SEARCH PRODUCTS
 const searchProducts = async (req, res) => {
