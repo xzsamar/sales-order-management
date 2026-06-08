@@ -10,6 +10,7 @@ const {
   getSimilarProducts,
   compareProducts,
   getVariations,
+  createProduct,
 } = require("../controllers/productController");
 
 // Product Management
